@@ -97,7 +97,7 @@ DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "HD private key
 
 #Start mn-bootstrap
 echo "Starting mn-bootstrap"
-mn start local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options"
+mn start "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options"
 
 #Export variables
 export CURRENT_VERSION
