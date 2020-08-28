@@ -7,6 +7,7 @@ async function main() {
   const packageFilePath = process.argv[2];
   const repositoryPath = process.argv[3];
   const overrideMajorVersion = process.argv[4] || undefined;
+  const overrideMinorVersion = process.argv[5] || undefined;
 
   // eslint-disable-next-line import/no-dynamic-require,global-require
   const { version } = require(packageFilePath);
@@ -19,6 +20,7 @@ async function main() {
 
   const tarballURL = await getGithubReleaseLink(version, repositoryPath, {
     overrideMajorVersion,
+    overrideMinorVersion,
   });
 
   console.log(tarballURL);

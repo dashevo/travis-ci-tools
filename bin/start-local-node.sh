@@ -33,6 +33,9 @@ case ${i} in
     --override-major-version=*)
     major_version="${i#*=}"
     ;;
+    --override-minor-version=*)
+    minor_version="${i#*=}"
+    ;;
     --dapi-branch=*)
     dapi_branch="${i#*=}"
     ;;
@@ -46,7 +49,7 @@ done
 echo "Defining versions to download"
 DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CURRENT_VERSION=$("$DIR"/get-release-version "$PACKAGE_JSON_PATH" "$major_version")
-MN_RELEASE_LINK=$("$DIR"/get-github-release-link "$PACKAGE_JSON_PATH" dashevo/mn-bootstrap "$major_version")
+MN_RELEASE_LINK=$("$DIR"/get-github-release-link "$PACKAGE_JSON_PATH" dashevo/mn-bootstrap "$major_version" "$minor_version")
 
 #Create temp dir
 TMP="$DIR"/../tmp

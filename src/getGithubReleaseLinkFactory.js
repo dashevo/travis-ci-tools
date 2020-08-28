@@ -15,6 +15,7 @@ function getGithubReleaseLinkFactory(githubClient) {
    * @param {string} repositoryPath
    * @param {Object} [options]
    * @param {string} [options.overrideMajorVersion]
+   * @param {string} [options.overrideMinorVersion]
    *
    * @return {Promise<string>}
    */
@@ -37,9 +38,13 @@ function getGithubReleaseLinkFactory(githubClient) {
           ? options.overrideMajorVersion
           : suiteVersion.major;
 
+        const minorVersion = options.overrideMinorVersion !== undefined
+          ? options.overrideMinorVersion
+          : suiteVersion.minor;
+
         return semver.satisfies(
           `${releaseVersion.major}.${releaseVersion.minor}.${releaseVersion.patch}`,
-          `${majorVersion}.${suiteVersion.minor}`,
+          `${majorVersion}.${minorVersion}`,
         );
       });
 
