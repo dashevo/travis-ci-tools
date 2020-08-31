@@ -87,7 +87,6 @@ curl -L "$MN_RELEASE_LINK" > "$TMP"/mn-bootstrap.tar.gz
 mkdir "$TMP"/mn-bootstrap && tar -C "$TMP"/mn-bootstrap -xvf "$TMP"/mn-bootstrap.tar.gz
 MN_RELEASE_DIR="$(ls "$TMP"/mn-bootstrap)"
 cd "$TMP"/mn-bootstrap/"$MN_RELEASE_DIR"
-chmod -R 777 data
 npm ci && npm link
 
 #Initialize mn-bootstrap
