@@ -95,6 +95,7 @@ echo "Initializing mn-bootstrap"
 mn config:default local
 mn config:set core.miner.enable true
 mn config:set core.miner.interval 1s
+mn config:set environment development
 
 OUTPUT=$(mn setup-for-local-development "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
 
