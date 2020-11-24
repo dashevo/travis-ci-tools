@@ -12,7 +12,7 @@ Usage: start-local-node.sh <path-to-package.json> [options]
   --override-minor-version    - minor version to use
   --dapi-branch               - dapi branch to be injected into mn-bootstrap
   --drive-branch              - drive branch to be injected into mn-bootstrap
-  --drive-slug                - drive slug to be injected into mn-bootstrap
+  --drive-repo-slug           - drive repo slug to be injected into mn-bootstrap
 "
 
 PACKAGE_JSON_PATH="$1"
@@ -44,8 +44,8 @@ case ${i} in
     --drive-branch=*)
     drive_branch="${i#*=}"
     ;;
-    --drive-slug=*)
-    drive_slug="${i#*=}"
+    --drive-repo-slug=*)
+    drive_repo_slug="${i#*=}"
     ;;
 esac
 done
@@ -77,11 +77,11 @@ fi
 
 # Download drive from defined branch
 mn_bootstrap_drive_options="--drive-image-build-path="
-if [ -n "$drive_branch" ] && [ -n "$drive_slug" ]
+if [ -n "$drive_branch" ] && [ -n "$drive_repo_slug" ]
 then
   echo "Cloning Drive from branch $drive_branch"
   cd "$TMP"
-  git clone https://github.com/"$drive_slug".git
+  git clone https://github.com/"$drive_repo_slug".git
   cd "$TMP"/drive
   git checkout "$drive_branch"
   mn_bootstrap_drive_options="--drive-image-build-path=$TMP/drive"
