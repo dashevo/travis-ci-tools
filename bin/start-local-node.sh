@@ -10,9 +10,9 @@ Usage: start-local-node.sh <path-to-package.json> [options]
   Options:
   --override-major-version    - major version to use
   --override-minor-version    - minor version to use
-  --dapi-branch               - dapi branch to be injected into dashman
-  --drive-branch              - drive branch to be injected into dashman
-  --sdk-branch                - Dash SDK (DashJS) branch to be injected into dashman
+  --dapi-branch               - dapi branch to be injected into mn-bootstrap
+  --drive-branch              - drive branch to be injected into mn-bootstrap
+  --sdk-branch                - Dash SDK (DashJS) branch to be injected into mn-bootstrap
 "
 
 PACKAGE_JSON_PATH="$1"
@@ -54,7 +54,7 @@ done
 
 DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CURRENT_VERSION=$("$DIR"/get-release-version "$PACKAGE_JSON_PATH" "$major_version")
-DASHMAN_RELEASE_LINK=$("$DIR"/get-github-release-link "$PACKAGE_JSON_PATH" dashevo/dashman "$major_version" "$minor_version")
+MN_RELEASE_LINK=$("$DIR"/get-github-release-link "$PACKAGE_JSON_PATH" dashevo/mn-bootstrap "$major_version" "$minor_version")
 
 echo "Current version: ${CURRENT_VERSION}";
 
@@ -64,7 +64,7 @@ rm -rf "$TMP"
 mkdir "$TMP"
 
 # Download dapi from defined branch
-dashman_dapi_options="--dapi-image-build-path="
+mn_bootstrap_dapi_options="--dapi-image-build-path="
 if [ -n "$dapi_branch" ]
 then
   echo "Cloning DAPI from branch $dapi_branch"
@@ -72,11 +72,11 @@ then
   git clone https://github.com/dashevo/dapi.git
   cd "$TMP"/dapi
   git checkout "$dapi_branch"
-  dashman_dapi_options="--dapi-image-build-path=$TMP/dapi"
+  mn_bootstrap_dapi_options="--dapi-image-build-path=$TMP/dapi"
 fi
 
 # Download drive from defined branch
-dashman_drive_options="--drive-image-build-path="
+mn_bootstrap_drive_options="--drive-image-build-path="
 if [ -n "$drive_branch" ]
 then
   echo "Cloning Drive from branch $dapi_branch"
@@ -84,15 +84,15 @@ then
   git clone https://github.com/dashevo/drive.git
   cd "$TMP"/drive
   git checkout "$drive_branch"
-  dashman_drive_options="--drive-image-build-path=$TMP/drive"
+  mn_bootstrap_drive_options="--drive-image-build-path=$TMP/drive"
 fi
 
-# Download and install dashman
-echo "Installing dashman"
-curl -L "$DASHMAN_RELEASE_LINK" > "$TMP"/dashman.tar.gz
-mkdir "$TMP"/dashman && tar -C "$TMP"/dashman -xvf "$TMP"/dashman.tar.gz
-DASHMAN_RELEASE_LINK="$(ls "$TMP"/dashman)"
-cd "$TMP"/dashman/"$DASHMAN_RELEASE_LINK"
+# Download and install mn-bootstrap
+echo "Installing mn-bootstrap"
+curl -L "$MN_RELEASE_LINK" > "$TMP"/mn-bootstrap.tar.gz
+mkdir "$TMP"/mn-bootstrap && tar -C "$TMP"/mn-bootstrap -xvf "$TMP"/mn-bootstrap.tar.gz
+MN_RELEASE_DIR="$(ls "$TMP"/mn-bootstrap)"
+cd "$TMP"/mn-bootstrap/"$MN_RELEASE_DIR"
 
 npm ci
 
@@ -104,21 +104,21 @@ fi
 
 npm link
 
-# Setup node for local node dashman
+# Setup node for local node mn-bootstrap
 echo "Setting up a local node"
 
-dashman config:default local
-dashman config:set core.miner.enable true
-dashman config:set core.miner.interval 1s
-dashman config:set environment development
-dashman config:set platform.drive.abci.log.level debug
+mn config:default local
+mn config:set core.miner.enable true
+mn config:set core.miner.interval 1s
+mn config:set environment development
+mn config:set platform.drive.abci.log.level debug
 
-OUTPUT=$(dashman setup local "$dashman_dapi_options" "$dashman_drive_options")
+OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
 
 FAUCET_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
-DPNS_CONTRACT_ID=$(dashman config:get platform.dpns.contract.id)
-DPNS_CONTRACT_BLOCK_HEIGHT=$(dashman config:get platform.dpns.contract.blockHeight)
-DPNS_TOP_LEVEL_IDENTITY_ID=$(dashman config:get platform.dpns.ownerId)
+DPNS_CONTRACT_ID=$(mn config:get platform.dpns.contract.id)
+DPNS_CONTRACT_BLOCK_HEIGHT=$(mn config:get platform.dpns.contract.blockHeight)
+DPNS_TOP_LEVEL_IDENTITY_ID=$(mn config:get platform.dpns.ownerId)
 DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "HD private key:" | awk '{$1=""; printf $5}')
 
 echo "Node is configured:"
@@ -130,9 +130,9 @@ echo "DPNS_TOP_LEVEL_IDENTITY_ID: ${DPNS_TOP_LEVEL_IDENTITY_ID}"
 echo "DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY: ${DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY}"
 
 
-#Start dashman
-echo "Starting dashman"
-dashman start "$dashman_dapi_options" "$dashman_drive_options"
+#Start mn-bootstrap
+echo "Starting mn-bootstrap"
+mn start "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options"
 
 #Export variables
 export CURRENT_VERSION

@@ -12,7 +12,7 @@ Helper scripts for Dash Travis setup
 
 ### get-github-release-link
 
-Example: `$ get-github-release-link /full/path/to/package.json dashevo/dashman`
+Example: `$ get-github-release-link /full/path/to/package.json dashevo/mn-bootstrap`
 
 Arguments:
 
