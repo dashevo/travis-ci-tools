@@ -116,6 +116,10 @@ then
   CONFIG="local_1"
 else
   mn config:default local
+  mn config:set core.miner.enable true
+  mn config:set core.miner.interval 1s
+  mn config:set environment development
+  mn config:set platform.drive.abci.log.stdout.level trace
   OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
   CONFIG="local"
 fi
@@ -138,11 +142,6 @@ then
   # Settings for seed node
   mn config:set --config=local_seed core.miner.enable true
   mn config:set --config=local_seed core.miner.interval 1s
-else
-  mn config:set core.miner.enable true
-  mn config:set core.miner.interval 1s
-  mn config:set environment development
-  mn config:set platform.drive.abci.log.stdout.level trace
 fi
 
 echo "Node is configured:"
