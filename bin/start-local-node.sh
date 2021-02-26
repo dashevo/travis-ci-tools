@@ -117,13 +117,15 @@ if [[ $CURRENT_VERSION == "0.19"* ]]
 then
   OUTPUT=$(mn setup local --node-count="$NODE_COUNT" "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
   CONFIG="local_1"
+  MINER_CONFIG="local_seed"
 else
   OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
   CONFIG="local"
+  MINER_CONFIG="local"
 fi
 
-mn config:set --config="$CONFIG" core.miner.enable true
-mn config:set --config="$CONFIG" core.miner.interval 1s
+mn config:set --config="$MINER_CONFIG" core.miner.enable true
+mn config:set --config="$MINER_CONFIG" core.miner.interval 1s
 
 FAUCET_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
 DPNS_CONTRACT_ID=$(mn config:get --config="$CONFIG" platform.dpns.contract.id)
