@@ -110,39 +110,26 @@ echo "Setting up a local node"
 # Set number of nodes
 NODE_COUNT=3
 
+mn config:set --config=local environment development
+mn config:set --config=local platform.drive.abci.log.stdout.level trace
+
 if [[ $CURRENT_VERSION == "0.19"* ]]
 then
   OUTPUT=$(mn setup local --node-count="$NODE_COUNT" "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
   CONFIG="local_1"
 else
-  mn config:default local
-  mn config:set core.miner.enable true
-  mn config:set core.miner.interval 1s
-  mn config:set environment development
-  mn config:set platform.drive.abci.log.stdout.level trace
   OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
   CONFIG="local"
 fi
+
+mn config:set --config="$CONFIG" core.miner.enable true
+mn config:set --config="$CONFIG" core.miner.interval 1s
 
 FAUCET_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
 DPNS_CONTRACT_ID=$(mn config:get --config="$CONFIG" platform.dpns.contract.id)
 DPNS_CONTRACT_BLOCK_HEIGHT=$(mn config:get --config="$CONFIG" platform.dpns.contract.blockHeight)
 DPNS_TOP_LEVEL_IDENTITY_ID=$(mn config:get --config="$CONFIG" platform.dpns.ownerId)
 DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "HD private key:" | awk '{$1=""; printf $5}')
-
-if [[ $CURRENT_VERSION == "0.19"* ]]
-then
-  # Settings for masternodes
-  for (( i=1; i<=NODE_COUNT; i++ ))
-  do
-      mn config:set --config=local_"${i}" environment development
-      mn config:set --config=local_"${i}" platform.drive.abci.log.stdout.level trace
-  done
-
-  # Settings for seed node
-  mn config:set --config=local_seed core.miner.enable true
-  mn config:set --config=local_seed core.miner.interval 1s
-fi
 
 echo "Node is configured:"
 
