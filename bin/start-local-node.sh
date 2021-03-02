@@ -89,6 +89,7 @@ fi
 
 # Download and install mn-bootstrap
 echo "Installing mn-bootstrap"
+echo "$MN_RELEASE_LINK"
 curl -L "$MN_RELEASE_LINK" > "$TMP"/mn-bootstrap.tar.gz
 mkdir "$TMP"/mn-bootstrap && tar -C "$TMP"/mn-bootstrap -xvf "$TMP"/mn-bootstrap.tar.gz
 MN_RELEASE_DIR="$(ls "$TMP"/mn-bootstrap)"
