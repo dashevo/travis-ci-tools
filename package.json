@@ -1,6 +1,6 @@
 {
   "name": "travis-ci-tools",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "Collection of Travis helper scripts",
   "scripts": {
     "lint": "eslint .",
