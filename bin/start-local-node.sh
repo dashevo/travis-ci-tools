@@ -126,7 +126,7 @@ else
 fi
 
 mn config:set --config="$MINER_CONFIG" core.miner.enable true
-mn config:set --config="$MINER_CONFIG" core.miner.interval 1s
+mn config:set --config="$MINER_CONFIG" core.miner.interval 5s
 
 FAUCET_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
 DPNS_CONTRACT_ID=$(mn config:get --config="$CONFIG" platform.dpns.contract.id)
