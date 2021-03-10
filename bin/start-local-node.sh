@@ -126,7 +126,7 @@ else
 fi
 
 mn config:set --config="$MINER_CONFIG" core.miner.enable true
-mn config:set --config="$MINER_CONFIG" core.miner.interval 1s
+mn config:set --config="$MINER_CONFIG" core.miner.interval 60s
 
 FAUCET_PRIVATE_KEY=$(echo "$OUTPUT" | grep -m 1 "Private key:" | awk '{printf $4}')
 DPNS_CONTRACT_ID=$(mn config:get --config="$CONFIG" platform.dpns.contract.id)
@@ -147,7 +147,7 @@ echo "DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY: ${DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY
 echo "Starting mn-bootstrap"
 if [[ $CURRENT_VERSION == "0.19"* ]]
 then
-  mn group:start "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options"
+  mn group:start "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options" --wait-for-readiness
 else
   mn start "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options"
 fi
