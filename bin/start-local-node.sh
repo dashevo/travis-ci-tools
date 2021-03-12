@@ -114,13 +114,15 @@ NODE_COUNT=3
 mn config:set --config=local environment development
 mn config:set --config=local platform.drive.abci.log.stdout.level trace
 
+exec 5>&1
+
 if [[ $CURRENT_VERSION == "0.19"* ]]
 then
-  OUTPUT=$(mn setup local --node-count="$NODE_COUNT" "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
+  OUTPUT=$(mn setup local --node-count="$NODE_COUNT" "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options" | tee >(cat - >&5))
   CONFIG="local_1"
   MINER_CONFIG="local_seed"
 else
-  OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options")
+  OUTPUT=$(mn setup local "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options" | tee >(cat - >&5))
   CONFIG="local"
   MINER_CONFIG="local"
 fi
