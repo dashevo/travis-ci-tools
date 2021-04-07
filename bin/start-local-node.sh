@@ -118,7 +118,18 @@ exec 5>&1
 
 if [[ $CURRENT_VERSION == "0.19"* ]]
 then
-  OUTPUT=$(mn setup local --node-count="$NODE_COUNT" "$mn_bootstrap_dapi_options" "$mn_bootstrap_drive_options" | tee >(cat - >&5))
+  #Setting build branches
+  if [ -n "$drive_branch" ]
+  then
+    mn config:set --config=local platform.drive.abci.docker.build.path "${TMP}/drive"
+  fi
+
+  if [ -n "$dapi_branch" ]
+  then
+    mn config:set --config=local platform.dapi.api.docker.build.path "${TMP}/dapi"
+  fi
+
+  OUTPUT=$(mn setup local --node-count="$NODE_COUNT" | tee >(cat - >&5))
   CONFIG="local_1"
   MINER_CONFIG="local_seed"
 else
@@ -143,18 +154,6 @@ echo "DPNS_CONTRACT_ID: ${DPNS_CONTRACT_ID}"
 echo "DPNS_CONTRACT_BLOCK_HEIGHT: ${DPNS_CONTRACT_BLOCK_HEIGHT}"
 echo "DPNS_TOP_LEVEL_IDENTITY_ID: ${DPNS_TOP_LEVEL_IDENTITY_ID}"
 echo "DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY: ${DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY}"
-
-#Setting build branches
-if [ -n "$drive_branch" ]
-then
-  mn config:set --config=local platform.drive.abci.docker.build.path "${TMP}/drive"
-fi
-
-if [ -n "$dapi_branch" ]
-then
-  mn config:set --config=local platform.dapi.api.docker.build.path "${TMP}/dapi"
-fi
-
 
 #Start mn-bootstrap
 echo "Starting mn-bootstrap"
