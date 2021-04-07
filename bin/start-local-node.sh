@@ -144,6 +144,17 @@ echo "DPNS_CONTRACT_BLOCK_HEIGHT: ${DPNS_CONTRACT_BLOCK_HEIGHT}"
 echo "DPNS_TOP_LEVEL_IDENTITY_ID: ${DPNS_TOP_LEVEL_IDENTITY_ID}"
 echo "DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY: ${DPNS_TOP_LEVEL_IDENTITY_PRIVATE_KEY}"
 
+#Setting build branches
+if [ -n "$drive_branch" ]
+then
+  mn config:set --config=local platform.drive.abci.docker.build.path "${TMP}/drive"
+fi
+
+if [ -n "$dapi_branch" ]
+then
+  mn config:set --config=local platform.dapi.api.docker.build.path "${TMP}/dapi"
+fi
+
 
 #Start mn-bootstrap
 echo "Starting mn-bootstrap"
